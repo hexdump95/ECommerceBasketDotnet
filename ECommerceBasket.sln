@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.API", "src\Basket.API\Basket.API.csproj", "{D0F5D935-0229-4128-9696-3C765F6ABEB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceBasket.API", "src\EcommerceBasket.API\EcommerceBasket.API.csproj", "{D0F5D935-0229-4128-9696-3C765F6ABEB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.Application", "src\Basket.Application\Basket.Application.csproj", "{A0859EA7-217C-4A9C-90A5-B4F4E2397599}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceBasket.Application", "src\EcommerceBasket.Application\EcommerceBasket.Application.csproj", "{A0859EA7-217C-4A9C-90A5-B4F4E2397599}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.Domain", "src\Basket.Domain\Basket.Domain.csproj", "{20FF5F3C-7D11-4564-816B-51F4F8643D07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceBasket.Domain", "src\EcommerceBasket.Domain\EcommerceBasket.Domain.csproj", "{20FF5F3C-7D11-4564-816B-51F4F8643D07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.Infrastructure", "src\Basket.Infrastructure\Basket.Infrastructure.csproj", "{3BB8A08C-E26F-46DF-BF5D-ABA4D93AE04E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceBasket.Infrastructure", "src\EcommerceBasket.Infrastructure\EcommerceBasket.Infrastructure.csproj", "{3BB8A08C-E26F-46DF-BF5D-ABA4D93AE04E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.Application.Tests", "tests\Basket.Application.Tests\Basket.Application.Tests.csproj", "{0D80D858-2052-4465-BFDB-38EF6A94A34B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcommerceBasket.Application.Tests", "tests\EcommerceBasket.Application.Tests\EcommerceBasket.Application.Tests.csproj", "{0D80D858-2052-4465-BFDB-38EF6A94A34B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

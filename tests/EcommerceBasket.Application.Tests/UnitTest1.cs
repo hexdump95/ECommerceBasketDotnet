@@ -1,4 +1,4 @@
-namespace Basket.Application.Tests;
+namespace EcommerceBasket.Application.Tests;
 
 public class UnitTest1
 {
