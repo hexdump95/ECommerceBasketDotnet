@@ -15,7 +15,7 @@ namespace EcommerceBasket.Application.Services
 
         public async Task<Basket> FindOne(Guid id)
         {
-            return await _basketRepository.FindOne(id)
+            return await _basketRepository.FindById(id)
                    ?? throw new NotImplementedException();
         }
 

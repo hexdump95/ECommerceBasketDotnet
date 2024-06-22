@@ -25,7 +25,7 @@ namespace EcommerceBasket.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<Basket?> FindOne(Guid id)
+        public async Task<Basket?> FindById(Guid id)
         {
             var redisValue = await _database.StringGetAsync($"{entityName}:{id}");
             return redisValue.IsNullOrEmpty
