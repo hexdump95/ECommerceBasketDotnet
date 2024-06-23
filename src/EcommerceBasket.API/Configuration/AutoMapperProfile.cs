@@ -1,9 +1,9 @@
 using AutoMapper;
 
-using EcommerceBasket.Domain.Entities;
+using EcommerceBasket.Domain.Models;
 using EcommerceBasket.Infrastructure.Persistence;
 
-namespace EcommerceBasket.Infrastructure.Configuration
+namespace EcommerceBasket.API.Configuration
 {
     public class AutoMapperProfile : Profile
     {

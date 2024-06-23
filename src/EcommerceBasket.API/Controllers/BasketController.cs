@@ -1,5 +1,5 @@
 using EcommerceBasket.Application.Services.Interfaces;
-using EcommerceBasket.Domain.Entities;
+using EcommerceBasket.Domain.Models;
 
 using Microsoft.AspNetCore.Mvc;
 

@@ -2,9 +2,9 @@ using System.Text.Json;
 
 using AutoMapper;
 
-using EcommerceBasket.Domain.Entities;
+using EcommerceBasket.Domain.Models;
 using EcommerceBasket.Domain.Repositories;
-using EcommerceBasket.Infrastructure.Configuration;
+using EcommerceBasket.Infrastructure.Data;
 using EcommerceBasket.Infrastructure.Persistence;
 
 using StackExchange.Redis;
@@ -19,9 +19,9 @@ namespace EcommerceBasket.Infrastructure.Repositories
         const string EntityName = "basket";
         const string EntityPluralName = "baskets";
 
-        public BasketRepository(RedisConfiguration redisConfiguration, IMapper mapper)
+        public BasketRepository(RedisConnection redisConnection, IMapper mapper)
         {
-            _database = redisConfiguration.GetDatabase();
+            _database = redisConnection.GetDatabase();
             _jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
             _mapper = mapper;
         }
@@ -38,7 +38,7 @@ namespace EcommerceBasket.Infrastructure.Repositories
                 return null;
             var basketEntity = JsonSerializer.Deserialize<BasketEntity>(redisValue!, _jsonOptions);
             var basket = _mapper.Map<BasketEntity, Basket>(basketEntity!);
-            basket.Id = id.ToString();
+            basket.Id = id;
             return basket;
         }
 
@@ -46,7 +46,9 @@ namespace EcommerceBasket.Infrastructure.Repositories
         {
             var basketEntity = _mapper.Map<Basket, BasketEntity>(basket);
             var jsonString = JsonSerializer.Serialize(basketEntity, _jsonOptions);
-            await _database.SetAddAsync($"{EntityPluralName}", basket.Id);
+            await _database.SetAddAsync($"{EntityPluralName}", basket.Id.ToString());
+            await _database.SortedSetAddAsync($"{EntityPluralName}:updated_at", basket.Id.ToString(),
+                basket.UpdatedAt.Ticks);
             await _database.StringSetAsync($"{EntityName}:{basket.Id}", jsonString);
             return basket;
         }
@@ -54,13 +56,30 @@ namespace EcommerceBasket.Infrastructure.Repositories
         public async Task<bool> Delete(Guid id)
         {
             var isSetDeleted = await _database.SetRemoveAsync(EntityPluralName, id.ToString());
+            var isSortedSetDeleted =
+                await _database.SortedSetRemoveAsync($"{EntityPluralName}:updated_at", id.ToString());
             var isStringDeleted = await _database.KeyDeleteAsync($"{EntityName}:{id}");
-            return isSetDeleted && isStringDeleted;
+            return isSetDeleted && isSortedSetDeleted && isStringDeleted;
         }
 
         public async Task<bool> ExistsById(Guid id)
         {
             return await _database.SetContainsAsync(EntityPluralName, id.ToString());
+        }
+
+        public async Task<int> DeleteBasketRecordsToUpdatedAt(DateTime toDate)
+        {
+            var redisValues =
+                await _database.SortedSetRangeByScoreAsync($"{EntityPluralName}:updated_at", 0, toDate.Ticks);
+
+            int deletedRecords = 0;
+            foreach (var redisValue in redisValues)
+            {
+                await Delete(Guid.Parse(redisValue!));
+                deletedRecords++;
+            }
+
+            return deletedRecords;
         }
     }
 }

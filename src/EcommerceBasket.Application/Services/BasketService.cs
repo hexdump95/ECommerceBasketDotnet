@@ -1,5 +1,5 @@
 using EcommerceBasket.Application.Services.Interfaces;
-using EcommerceBasket.Domain.Entities;
+using EcommerceBasket.Domain.Models;
 using EcommerceBasket.Domain.Repositories;
 
 namespace EcommerceBasket.Application.Services
@@ -21,7 +21,8 @@ namespace EcommerceBasket.Application.Services
 
         public async Task<Basket> Save(Basket basket)
         {
-            basket.Id = Guid.NewGuid().ToString();
+            basket.Id = Guid.NewGuid();
+            basket.UpdatedAt = DateTime.UtcNow;
             return await _basketRepository.Save(basket);
         }
 
@@ -30,6 +31,7 @@ namespace EcommerceBasket.Application.Services
             var exists = await _basketRepository.ExistsById(id);
             if (!exists)
                 throw new NotImplementedException();
+            basket.UpdatedAt = DateTime.UtcNow;
             return await _basketRepository.Save(basket);
         }
 

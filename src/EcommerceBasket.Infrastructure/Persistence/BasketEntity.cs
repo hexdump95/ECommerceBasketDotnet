@@ -4,5 +4,6 @@ namespace EcommerceBasket.Infrastructure.Persistence
     {
         public string? UserId { get; set; }
         public List<BasketItemEntity> Items { get; set; } = [];
+        public DateTime UpdatedAt { get; set; }
     }
 }

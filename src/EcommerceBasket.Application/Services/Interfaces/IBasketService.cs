@@ -1,4 +1,4 @@
-using EcommerceBasket.Domain.Entities;
+using EcommerceBasket.Domain.Models;
 
 namespace EcommerceBasket.Application.Services.Interfaces
 {

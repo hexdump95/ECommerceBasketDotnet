@@ -1,12 +1,12 @@
 using StackExchange.Redis;
 
-namespace EcommerceBasket.Infrastructure.Configuration
+namespace EcommerceBasket.Infrastructure.Data
 {
-    public class RedisConfiguration
+    public class RedisConnection
     {
         private readonly ConnectionMultiplexer _connection;
 
-        public RedisConfiguration(string connectionString)
+        public RedisConnection(string connectionString)
         {
             _connection = ConnectionMultiplexer.Connect(connectionString);
         }
