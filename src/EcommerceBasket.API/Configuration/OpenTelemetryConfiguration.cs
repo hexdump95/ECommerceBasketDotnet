@@ -22,11 +22,13 @@ namespace EcommerceBasket.API.Configuration
             builder.Services.AddOpenTelemetry()
                 .ConfigureResource(resource => resource.AddService(serviceName))
                 .WithTracing(tracing => tracing
+                    .AddSource(serviceName)
                     .AddAspNetCoreInstrumentation()
-                    .AddConsoleExporter())
+                    .AddOtlpExporter())
                 .WithMetrics(metrics => metrics
                     .AddAspNetCoreInstrumentation()
                     .AddConsoleExporter());
+            builder.Services.AddSingleton(TracerProvider.Default.GetTracer(serviceName));
         }
     }
 }

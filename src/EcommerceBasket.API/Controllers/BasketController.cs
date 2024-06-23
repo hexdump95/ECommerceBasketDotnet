@@ -6,6 +6,8 @@ using EcommerceBasket.Infrastructure;
 
 using Microsoft.AspNetCore.Mvc;
 
+using OpenTelemetry.Trace;
+
 namespace EcommerceBasket.API.Controllers
 {
     [ApiController]
@@ -15,27 +17,32 @@ namespace EcommerceBasket.API.Controllers
         private readonly ILogger<BasketController> _logger;
         private readonly IBasketService _basketService;
         private readonly JsonSerializerOptions _jsonOptions;
+        private readonly Tracer _tracer;
 
         public BasketController(ILogger<BasketController> logger, IBasketService basketService,
-            JsonOptionsProvider jsonOptionsProvider)
+            JsonOptionsProvider jsonOptionsProvider, Tracer tracer)
         {
             _logger = logger;
             _basketService = basketService;
             _jsonOptions = jsonOptionsProvider.JsonOptions;
+            _tracer = tracer;
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Basket>> GetOne(Guid id)
         {
+            using var span = _tracer.StartActiveSpan("get-one");
             try
             {
                 var basket = await _basketService.FindOne(id);
                 _logger.LogInformation("Basket found: {result}", JsonSerializer.Serialize(basket, _jsonOptions));
                 return Ok(basket);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                _logger.LogInformation("There was an error: {errorMessage}", ex.Message);
+                span.SetStatus(Status.Error);
+                span.RecordException(e);
+                _logger.LogInformation("There was an error: {errorMessage}", e.Message);
                 return BadRequest();
             }
         }
