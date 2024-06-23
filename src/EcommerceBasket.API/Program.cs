@@ -2,6 +2,7 @@ using EcommerceBasket.API.Configuration;
 using EcommerceBasket.Application.Services;
 using EcommerceBasket.Application.Services.Interfaces;
 using EcommerceBasket.Domain.Repositories;
+using EcommerceBasket.Infrastructure;
 using EcommerceBasket.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.ConfigureQuartz();
 builder.ConfigureRedis();
+builder.ConfigureOpenTelemetry();
 
+builder.Services.AddSingleton<JsonOptionsProvider>();
 builder.Services.AddScoped<IBasketService, BasketService>();
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 
@@ -30,7 +33,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

@@ -19,10 +19,11 @@ namespace EcommerceBasket.Infrastructure.Repositories
         const string EntityName = "basket";
         const string EntityPluralName = "baskets";
 
-        public BasketRepository(RedisConnection redisConnection, IMapper mapper)
+        public BasketRepository(RedisConnection redisConnection, JsonOptionsProvider jsonOptionsProvider,
+            IMapper mapper)
         {
             _database = redisConnection.GetDatabase();
-            _jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            _jsonOptions = jsonOptionsProvider.JsonOptions;
             _mapper = mapper;
         }
 
