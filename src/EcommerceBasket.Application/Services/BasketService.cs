@@ -21,7 +21,7 @@ namespace EcommerceBasket.Application.Services
 
         public async Task<Basket> Save(Basket basket)
         {
-            basket.Id = Guid.NewGuid();
+            basket.Id = Guid.NewGuid().ToString();
             return await _basketRepository.Save(basket);
         }
 
