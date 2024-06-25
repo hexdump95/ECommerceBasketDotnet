@@ -4,9 +4,9 @@ namespace EcommerceBasket.Application.Services.Interfaces
 {
     public interface IBasketService
     {
-        Task<Basket> FindOne(Guid id);
+        Task<Basket> FindByUserId(string userId);
         Task<Basket> Save(Basket basket);
-        Task<Basket> Update(Guid id, Basket basket);
-        Task<bool> Delete(Guid id);
+        Task<Basket> UpdateByUserId(string id, Basket basket);
+        Task<bool> DeleteByUserId(string userId);
     }
 }

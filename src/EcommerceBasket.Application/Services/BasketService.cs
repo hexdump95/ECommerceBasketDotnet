@@ -13,31 +13,30 @@ namespace EcommerceBasket.Application.Services
             _basketRepository = basketRepository;
         }
 
-        public async Task<Basket> FindOne(Guid id)
+        public async Task<Basket> FindByUserId(string userId)
         {
-            return await _basketRepository.FindById(id)
+            return await _basketRepository.FindByUserId(userId)
                    ?? throw new NotImplementedException();
         }
 
         public async Task<Basket> Save(Basket basket)
         {
-            basket.Id = Guid.NewGuid();
             basket.UpdatedAt = DateTime.UtcNow;
             return await _basketRepository.Save(basket);
         }
 
-        public async Task<Basket> Update(Guid id, Basket basket)
+        public async Task<Basket> UpdateByUserId(string userId, Basket basket)
         {
-            var exists = await _basketRepository.ExistsById(id);
+            var exists = await _basketRepository.ExistsByUserId(userId);
             if (!exists)
                 throw new NotImplementedException();
             basket.UpdatedAt = DateTime.UtcNow;
             return await _basketRepository.Save(basket);
         }
 
-        public async Task<bool> Delete(Guid id)
+        public async Task<bool> DeleteByUserId(string userId)
         {
-            return await _basketRepository.Delete(id);
+            return await _basketRepository.Delete(userId);
         }
     }
 }

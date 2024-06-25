@@ -32,14 +32,18 @@ namespace EcommerceBasket.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<Basket?> FindById(Guid id)
+        public Task<Basket?> FindById(string key)
         {
-            var redisValue = await _database.StringGetAsync($"{EntityName}:{id}");
+            throw new NotImplementedException();
+        }
+        
+        public async Task<Basket?> FindByUserId(string userId)
+        {
+            var redisValue = await _database.StringGetAsync($"{EntityName}:{userId}");
             if (redisValue.IsNullOrEmpty)
                 return null;
             var basketEntity = JsonSerializer.Deserialize<BasketEntity>(redisValue!, _jsonOptions);
             var basket = _mapper.Map<BasketEntity, Basket>(basketEntity!);
-            basket.Id = id;
             return basket;
         }
 
@@ -47,25 +51,30 @@ namespace EcommerceBasket.Infrastructure.Repositories
         {
             var basketEntity = _mapper.Map<Basket, BasketEntity>(basket);
             var jsonString = JsonSerializer.Serialize(basketEntity, _jsonOptions);
-            await _database.SetAddAsync($"{EntityPluralName}", basket.Id.ToString());
-            await _database.SortedSetAddAsync($"{EntityPluralName}:updated_at", basket.Id.ToString(),
+            await _database.SetAddAsync($"{EntityPluralName}", basket.UserId);
+            await _database.SortedSetAddAsync($"{EntityPluralName}:updated_at", basket.UserId,
                 basket.UpdatedAt.Ticks);
-            await _database.StringSetAsync($"{EntityName}:{basket.Id}", jsonString);
+            await _database.StringSetAsync($"{EntityName}:{basket.UserId}", jsonString);
             return basket;
         }
 
-        public async Task<bool> Delete(Guid id)
+        public Task<bool> Delete(string key)
         {
-            var isSetDeleted = await _database.SetRemoveAsync(EntityPluralName, id.ToString());
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> DeleteByUserId(string userId)
+        {
+            var isSetDeleted = await _database.SetRemoveAsync(EntityPluralName, userId);
             var isSortedSetDeleted =
-                await _database.SortedSetRemoveAsync($"{EntityPluralName}:updated_at", id.ToString());
-            var isStringDeleted = await _database.KeyDeleteAsync($"{EntityName}:{id}");
+                await _database.SortedSetRemoveAsync($"{EntityPluralName}:updated_at", userId);
+            var isStringDeleted = await _database.KeyDeleteAsync($"{EntityName}:{userId}");
             return isSetDeleted && isSortedSetDeleted && isStringDeleted;
         }
 
-        public async Task<bool> ExistsById(Guid id)
+        public async Task<bool> ExistsByUserId(string userId)
         {
-            return await _database.SetContainsAsync(EntityPluralName, id.ToString());
+            return await _database.SetContainsAsync(EntityPluralName, userId);
         }
 
         public async Task<int> DeleteBasketRecordsToUpdatedAt(DateTime toDate)
@@ -76,7 +85,7 @@ namespace EcommerceBasket.Infrastructure.Repositories
             int deletedRecords = 0;
             foreach (var redisValue in redisValues)
             {
-                await Delete(Guid.Parse(redisValue!));
+                await Delete(redisValue!);
                 deletedRecords++;
             }
 

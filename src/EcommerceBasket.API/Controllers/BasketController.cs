@@ -29,12 +29,12 @@ namespace EcommerceBasket.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Basket>> GetOne(Guid id)
+        public async Task<ActionResult<Basket>> GetOne(string userId)
         {
             using var span = _tracer.StartActiveSpan("get-one");
             try
             {
-                var basket = await _basketService.FindOne(id);
+                var basket = await _basketService.FindByUserId(userId);
                 _logger.LogInformation("Basket found: {result}", JsonSerializer.Serialize(basket, _jsonOptions));
                 return Ok(basket);
             }
@@ -54,15 +54,15 @@ namespace EcommerceBasket.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Basket>> Save(Guid id, [FromBody] Basket basket)
+        public async Task<ActionResult<Basket>> Save(string userId, [FromBody] Basket basket)
         {
-            return Ok(await _basketService.Update(id, basket));
+            return Ok(await _basketService.UpdateByUserId(userId, basket));
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<bool>> Delete(Guid id)
+        public async Task<ActionResult<bool>> Delete(string userId)
         {
-            return Ok(await _basketService.Delete(id));
+            return Ok(await _basketService.DeleteByUserId(userId));
         }
     }
 }
